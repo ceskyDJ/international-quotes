@@ -1,0 +1,12 @@
+# IDE files
+.idea/
+
+# Generated files
+node_modules/
+dist/
+
+# Downloaded Wikimedia dumps
+dumps/
+
+# Secrets
+.env
