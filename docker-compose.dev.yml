@@ -1,0 +1,22 @@
+name: international-quotes-dev
+
+services:
+  database:
+    container_name: international-quotes-dev__database
+    image: postgres:17-alpine
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:15432:5432"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRESQL_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD}
+      POSTGRES_DB: ${POSTGRESQL_DATABASE}
+    volumes:
+      - database:/var/lib/postgresql/data
+
+volumes:
+  database:
+    name: international-quotes-dev__database
+    driver: local

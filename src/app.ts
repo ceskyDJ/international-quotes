@@ -1,26 +1,67 @@
 /**
  * @file app.ts
  * @description Main application file that sets up the Express server
- * @author express-generator
  * @author Michal Šmahel (xsmahe01)
- * @date 25th April 2025
+ * @date April 2025
  */
 
-import express from "express"
-import morgan from "morgan"
+import express, { Application } from "express"
+import { useExpressServer } from "routing-controllers"
+import cors from "cors"
+import helmet from "helmet"
+import bodyParser from "body-parser"
+import path from "path"
+import { SequelizeProvider } from "./providers/sequelize.provider"
+import { Service } from "typedi"
 
-import { router as authorsRouter } from "./routes/authors"
-import { router as languagesRouter } from "./routes/languages"
-import { router as quotesRouter } from "./routes/quotes"
+/**
+ * @class AppBootstrap
+ * @classDesc Bootstrap class for the Express application
+ */
+@Service()
+export class AppBootstrap {
+  /**
+   * @constructor
+   * @param {SequelizeProvider} sequelizeProvider Provider for Sequelize ORM (dependency)
+   */
+  public constructor(private readonly sequelizeProvider: SequelizeProvider) {}
 
-const app = express()
+  /**
+   * @method setup
+   * @description Sets up the Express application with middlewares and routes
+   * @returns {Promise<Application>} The configured Express application
+   */
+  public async setup(): Promise<Application> {
+    // Create Express app
+    const app = express()
 
-app.use(morgan("dev"))
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+    // Apply middlewares
+    app.use(cors())
+    app.use(helmet())
+    app.use(bodyParser.json())
+    app.use(bodyParser.urlencoded({ extended: true }))
 
-app.use("/authors", authorsRouter)
-app.use("/languages", languagesRouter)
-app.use("/quotes", quotesRouter)
+    // Setup static file serving (for index and its linked resources)
+    app.use(express.static(path.join(__dirname, "../public")))
 
-export default app
+    // Initialize Sequelize (DB ORM)
+    const sequelize = this.sequelizeProvider.provide()
+    await sequelize.authenticate()
+    await sequelize.sync()
+
+    // Setup Express HTTP server for serving API
+    useExpressServer(app, {
+      cors: true,
+      routePrefix: "/api/v1",
+      controllers: [`${__dirname}/controllers/v1/*{.js,.ts}`],
+      classTransformer: true,
+      validation: {
+        whitelist: true,
+        forbidNonWhitelisted: true,
+      },
+      defaultErrorHandler: true,
+    })
+
+    return app
+  }
+}

@@ -6,61 +6,33 @@
  * @date 25th April 2025
  */
 
-import http from "http"
-import debug from "debug"
+import "reflect-metadata"
+import { useContainer } from "routing-controllers"
+import { Container } from "typedi"
 
-import app from "./app"
-import config from "./config/config"
-import { HttpError } from "http-errors"
+import { AppBootstrap } from "./app"
+import { ConfigProvider } from "./providers/config.provider"
 
-// Set port to application controller
-app.set("port", config.port)
+void (async (): Promise<void> => {
+  try {
+    // Setup DI container
+    useContainer(Container)
 
-// Configure the HTTP server and start listening for connections
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
-const server = http.createServer(app)
-server.listen(config.port)
-server.on("error", onError)
-server.on("listening", onListening)
+    // Load configuration
+    const configProvider = Container.get(ConfigProvider)
+    const httpServerConfig = configProvider.provideHttpServerConfig()
 
-/**
- * Event listener for HTTP server "error" event.
- */
-function onError(error: HttpError): void {
-  if (error.syscall !== "listen") {
-    throw error
+    // Setup application
+    const bootstrap = Container.get(AppBootstrap)
+    const app = await bootstrap.setup()
+
+    // Start an HTTP server serving the application
+    app.listen(httpServerConfig.port, () => {
+      console.log("Application started successfully")
+      console.log(`Listening on port ${String(httpServerConfig.port)}...`)
+    })
+  } catch (error) {
+    console.error(`Failed to start application: ${String(error)}`)
+    process.exit(1)
   }
-
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case "EACCES":
-      console.error(`Port ${String(config.port)} requires elevated privileges`)
-      process.exit(1)
-      break
-    case "EADDRINUSE":
-      console.error(`Port ${String(config.port)} is already in use`)
-      process.exit(1)
-      break
-    default:
-      throw error
-  }
-}
-
-/**
- * Event listener for HTTP server "listening" event.
- */
-function onListening(): void {
-  const addr = server.address()
-
-  if (addr === null) {
-    throw new Error("Server didn't start properly, as its address is null")
-  }
-
-  if (typeof addr === "string") {
-    throw new Error(
-      `Server didn't start properly, as its address is a string: ${addr}`,
-    )
-  }
-
-  debug(`Listening on port ${String(addr.port)}...`)
-}
+})()
