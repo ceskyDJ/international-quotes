@@ -1,0 +1,35 @@
+name: international-quotes
+
+services:
+  app:
+    container_name: international-quotes__app
+    image: ghcr.io/ceskydj/international-quotes:latest
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      POSTGRESQL_HOST: database
+      POSTGRESQL_PORT: 5432
+
+  database:
+    container_name: international-quotes__database
+    image: postgres:17-alpine
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRESQL_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD}
+      POSTGRES_DB: ${POSTGRESQL_DATABASE}
+    volumes:
+      - database:/var/lib/postgresql/data
+
+volumes:
+    database:
+        name: international-quotes__database
+        driver: local
