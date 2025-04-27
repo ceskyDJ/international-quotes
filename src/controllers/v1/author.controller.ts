@@ -7,8 +7,9 @@
 
 import "reflect-metadata"
 import { Service } from "typedi"
-import { Get, JsonController, QueryParam } from "routing-controllers"
+import { Get, JsonController, Params } from "routing-controllers"
 import { Author } from "../../models/author.model"
+import { LangParams } from "./dto/langParams.dto"
 
 /**
  * @class AuthorController
@@ -31,14 +32,12 @@ export class AuthorController {
   /**
    * @method getAuthorsByLanguage
    * @description Lists all authors that we have quotes for (at least 1 quote) in the selected language
-   * @param {string} langAbbr Abbreviation of the selected language
+   * @param {LangParams} params Selected language
    * @returns {Author[]} List of authors
    */
   @Get("/:langAbbr")
-  public getAuthorsByLanguage(
-    @QueryParam("langAbbr", { required: true, type: String }) langAbbr: string,
-  ): Author[] {
-    console.log(`Fetching authors for language: ${langAbbr}...`)
+  public getAuthorsByLanguage(@Params() params: LangParams): Author[] {
+    console.log(`Fetching authors for language: ${params.langAbbr}...`)
     return []
   }
 }

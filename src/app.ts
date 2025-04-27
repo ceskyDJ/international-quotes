@@ -58,6 +58,7 @@ export class AppBootstrap {
       validation: {
         whitelist: true,
         forbidNonWhitelisted: true,
+        validationError: { target: false, value: true },
       },
       defaultErrorHandler: true,
     })
