@@ -9,7 +9,8 @@
     "start:dev": "node --require dotenv/config ./dist/index.js",
     "dev": "nodemon --watch 'src/**/*.ts' --exec node --import tsx --require dotenv/config src/index.ts",
     "dev:db": "docker compose --file docker-compose.dev.yml up",
-    "lint": "npx eslint --fix ./src --ext src/**/*.ts"
+    "lint": "npx eslint --fix ./src --ext src/**/*.ts",
+    "doc": "npx jsdoc -c jsdoc-conf.json -R README.md ."
   },
   "repository": {
     "type": "git",
@@ -50,12 +51,14 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
     "@types/node": "^22.15.2",
+    "docdash": "^2.0.2",
     "dotenv": "^16.5.0",
     "eslint": "^9.25.1",
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-prettier": "^5.2.6",
     "globals": "^16.0.0",
     "http-errors": "^2.0.0",
+    "jsdoc": "^4.0.4",
     "nodemon": "^3.1.10",
     "prettier": "^3.5.3",
     "tsx": "^4.19.3",

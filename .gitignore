@@ -4,6 +4,7 @@
 # Generated files
 node_modules/
 dist/
+doc/
 
 # Downloaded Wikimedia dumps
 dumps/
