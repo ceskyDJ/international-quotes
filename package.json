@@ -10,7 +10,8 @@
     "dev": "nodemon --watch 'src/**/*.ts' --exec node --import tsx --require dotenv/config src/index.ts",
     "dev:db": "docker compose --file docker-compose.dev.yml up",
     "lint": "npx eslint --fix ./src --ext src/**/*.ts",
-    "doc": "npx jsdoc -c jsdoc-conf.json -R README.md ."
+    "doc": "npx jsdoc -c jsdoc-conf.json -R README.md .",
+    "pack": "zip xsmahe01.zip docker/ public/ src/ .env.example docker-compose.yml jsdoc-conf.json package.json package-lock.json tsconfig.json README.md"
   },
   "repository": {
     "type": "git",
