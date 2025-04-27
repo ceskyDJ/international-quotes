@@ -1,5 +1,5 @@
 {
-  "name": "international-quotes",
+  "name": "international-quotes-api",
   "version": "0.1.0",
   "description": "API for international quotes obtained from Wikiquote",
   "main": "dist/index.js",
