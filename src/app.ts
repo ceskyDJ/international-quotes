@@ -1,6 +1,8 @@
 /**
  * @file app.ts
- * @description Main application file that sets up the Express server
+ *
+ * Main application file that sets up the Express server
+ *
  * @author Michal Šmahel (xsmahe01)
  * @date April 2025
  */
@@ -15,21 +17,21 @@ import { SequelizeProvider } from "./providers/sequelize.provider"
 import { Service } from "typedi"
 
 /**
- * @class AppBootstrap
- * @classDesc Bootstrap class for the Express application
+ * Bootstrap class for the Express application
  */
 @Service()
 export class AppBootstrap {
   /**
-   * @constructor
-   * @param {SequelizeProvider} sequelizeProvider Provider for Sequelize ORM (dependency)
+   * Constructor for AppBootstrap
+   *
+   * @param sequelizeProvider Provider for Sequelize ORM (dependency)
    */
   public constructor(private readonly sequelizeProvider: SequelizeProvider) {}
 
   /**
-   * @method setup
-   * @description Sets up the Express application with middlewares and routes
-   * @returns {Promise<Application>} The configured Express application
+   * Sets up the Express application with middlewares and routes
+   *
+   * @returns The configured Express application
    */
   public async setup(): Promise<Application> {
     // Create Express app

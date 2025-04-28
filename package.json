@@ -10,8 +10,8 @@
     "dev": "nodemon --watch 'src/**/*.ts' --exec npx ts-node --require dotenv/config ./src/index.ts",
     "dev:db": "docker compose --file docker-compose.dev.yml up",
     "lint": "npx eslint --fix ./src --ext src/**/*.ts",
-    "doc": "npx jsdoc -c jsdoc-conf.json -R README.md .",
-    "pack": "zip xsmahe01.zip docker/ public/ src/ .env.example docker-compose.yml jsdoc-conf.json package.json package-lock.json tsconfig.json README.md"
+    "doc": "npx typedoc --out ./doc --entryPoints ./src --entryPointStrategy Expand --plugin typedoc-theme-hierarchy --plugin typedoc-plugin-mdn-links --plugin typedoc-plugin-dt-links --excludeExternals --theme hierarchy",
+    "pack": "npm run doc && zip xsmahe01.zip doc/ docker/ public/ src/ .env.example docker-compose.yml package.json package-lock.json tsconfig.json README.md"
   },
   "repository": {
     "type": "git",
@@ -52,17 +52,19 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
     "@types/node": "^22.15.2",
-    "docdash": "^2.0.2",
     "dotenv": "^16.5.0",
     "eslint": "^9.25.1",
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-prettier": "^5.2.6",
     "globals": "^16.0.0",
     "http-errors": "^2.0.0",
-    "jsdoc": "^4.0.4",
     "nodemon": "^3.1.10",
     "prettier": "^3.5.3",
     "ts-node": "^10.9.2",
+    "typedoc": "^0.28.3",
+    "typedoc-plugin-dt-links": "^2.0.0",
+    "typedoc-plugin-mdn-links": "^5.0.1",
+    "typedoc-theme-hierarchy": "^6.0.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.31.0"
   }

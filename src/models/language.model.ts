@@ -1,3 +1,10 @@
+/**
+ * @file language.model.ts
+ * @module models
+ * @author Michal Šmahel (xsmahe01)
+ * @date April 2025
+ */
+
 import {
   BelongsToMany,
   Column,
@@ -14,14 +21,13 @@ import { Author } from "./author.model"
 import { TranslatedAuthorName } from "./translatedAuthorName.model"
 
 /**
- * @class Language
- * @extends Model
- * @classDesc Model representing a natural language
- * @property {string} abbreviation Abbreviation of the language (e.g., "cs" for Czech)
- * @property {string} englishName Full name of the language in English (e.g., "Czech")
- * @property {string} nativeName Full name of the language in its native form (e.g., "Čeština")
- * @property {Array<Quote>} quotes Quotes associated with the language
- * @property {Array<Author & { TranslatedAuthorName: TranslatedAuthorName }>} translatedAuthorNames Names of authors in different languages
+ * Model representing a natural language
+ *
+ * @property abbreviation Abbreviation of the language (e.g., "cs" for Czech)
+ * @property englishName Full name of the language in English (e.g., "Czech")
+ * @property nativeName Full name of the language in its native form (e.g., "Čeština")
+ * @property quotes Quotes associated with the language
+ * @property translatedAuthorNames Names of authors in different languages
  */
 @Table
 export class Language extends Model {

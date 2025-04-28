@@ -1,6 +1,6 @@
 /**
- * @file authors.ts
- * @description Route definitions for endpoints under /authors
+ * @file authors.controller.ts
+ * @model controllers.v1
  * @author Michal Šmahel (xsmahe01)
  * @date 25th April 2025
  */
@@ -12,16 +12,15 @@ import { Author } from "../../models/author.model"
 import { LangParams } from "./dto/langParams.dto"
 
 /**
- * @class AuthorController
- * @description Controller for handling author-related requests
+ * Controller for handling author-related requests
  */
 @JsonController("/authors")
 @Service()
 export class AuthorController {
   /**
-   * @method getAllAuthors
-   * @description Lists all authors that we have quotes for (at least 1 quote)
-   * @returns {Author[]} List of authors
+   * Lists all authors that we have quotes for (at least 1 quote)
+   *
+   * @returns List of authors
    */
   @Get("/")
   public getAllAuthors(): Author[] {
@@ -30,10 +29,10 @@ export class AuthorController {
   }
 
   /**
-   * @method getAuthorsByLanguage
-   * @description Lists all authors that we have quotes for (at least 1 quote) in the selected language
-   * @param {LangParams} params Selected language
-   * @returns {Author[]} List of authors
+   * Lists all authors that we have quotes for (at least 1 quote) in the selected language
+   *
+   * @param params Selected language
+   * @returns List of authors
    */
   @Get("/:langAbbr")
   public getAuthorsByLanguage(@Params() params: LangParams): Author[] {

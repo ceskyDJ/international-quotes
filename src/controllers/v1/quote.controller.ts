@@ -1,6 +1,6 @@
 /**
- * @file quotes.ts
- * @description Route definitions for endpoints under /quotes
+ * @file quotes.controller.ts
+ * @model controllers.v1
  * @author Michal Šmahel (xsmahe01)
  * @date 25th April 2025
  */
@@ -11,14 +11,17 @@ import { Service } from "typedi"
 import { LangParams } from "./dto/langParams.dto"
 import { LangAndAuthorParams } from "./dto/langAndAuthorParams.dto"
 
+/**
+ * Controller for handling quote-related requests
+ */
 @JsonController("/quotes")
 @Service()
 export class QuoteController {
   /**
-   * @method getAllQuotes
-   * @description Lists all quotes in the selected language
-   * @param {LangParams} params Selected language
-   * @returns {Quote[]} List of quotes
+   * Lists all quotes in the selected language
+   *
+   * @param params Selected language
+   * @returns List of quotes
    */
   @Get("/:langAbbr")
   public getAllQuotes(@Params() params: LangParams): Quote[] {
@@ -27,10 +30,10 @@ export class QuoteController {
   }
 
   /**
-   * @method randomQuote
-   * @description List random quote in the selected language
-   * @param {LangParams} params Selected language
-   * @returns {Quote} Random quote
+   * List random quote in the selected language
+   *
+   * @param params Selected language
+   * @returns Random quote
    */
   @Get("/:langAbbr/random")
   public randomQuote(@Params() params: LangParams): Quote {
@@ -39,10 +42,10 @@ export class QuoteController {
   }
 
   /**
-   * @method getAllQuotesByAuthor
-   * @description Lists all quotes in the selected language authored by the selected author
-   * @param {LangAndAuthorParams} params Selected language and author
-   * @returns {Quote[]} List of quotes
+   * Lists all quotes in the selected language authored by the selected author
+   *
+   * @param params Selected language and author
+   * @returns List of quotes
    */
   @Get("/:langAbbr/:authorId")
   public getAllQuotesByAuthor(@Params() params: LangAndAuthorParams): Quote[] {
@@ -54,10 +57,10 @@ export class QuoteController {
   }
 
   /**
-   * @method getRandomQuoteByAuthor
-   * @description Return a random quote in the selected language authored by the selected author
-   * @param {LangAndAuthorParams} params Selected language and author
-   * @returns {Quote} Random quote
+   * Return a random quote in the selected language authored by the selected author
+   *
+   * @param params Selected language and author
+   * @returns Random quote
    */
   @Get("/:langAbbr/:authorId/random")
   public getRandomQuoteByAuthor(@Params() params: LangAndAuthorParams): Quote {

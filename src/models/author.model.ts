@@ -1,3 +1,10 @@
+/**
+ * @file author.model.ts
+ * @module models
+ * @author Michal Šmahel (xsmahe01)
+ * @date April 2025
+ */
+
 import {
   BelongsToMany,
   Column,
@@ -14,12 +21,11 @@ import { Quote } from "./quote.model"
 import { TranslatedAuthorName } from "./translatedAuthorName.model"
 
 /**
- * @class Author
- * @extends Model
- * @classDesc Model representing an author of quotes
- * @property {string} englishFullName Full name of the author in English
- * @property {Array<Language & { TranslatedAuthorName: TranslatedAuthorName }>} translatedNames Names of the author in different languages
- * @property {Quote[]} quotes Quotes associated with the author
+ * Model representing an author of quotes
+ *
+ * @property englishFullName Full name of the author in English
+ * @property translatedNames Names of the author in different languages
+ * @property quotes Quotes associated with the author
  */
 @Table
 export class Author extends Model {

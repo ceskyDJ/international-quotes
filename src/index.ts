@@ -1,9 +1,10 @@
 /**
  * @file index.ts
- * @description This file is the entry point for the application. It creates an HTTP server running Express.js
- * @author express-generator
+ *
+ * This file is the entry point for the application. It creates an HTTP server running Express.js
+ *
  * @author Michal Šmahel (xsmahe01)
- * @date 25th April 2025
+ * @date April 2025
  */
 
 import "reflect-metadata"

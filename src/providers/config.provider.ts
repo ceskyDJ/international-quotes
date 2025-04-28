@@ -8,16 +8,22 @@
 import { Service } from "typedi"
 
 /**
- * @interface HttpServerConfig
- * @classDesc Configuration for the HTTP server
+ * Configuration for the HTTP server
+ *
+ * @property port The port on which the HTTP server will listen
  */
 export interface HttpServerConfig {
   port: number
 }
 
 /**
- * @interface DatabaseConfig
- * @classDesc Configuration for the database connection
+ * Configuration for the database connection
+ *
+ * @property host The host of the database server
+ * @property port The port of the database server
+ * @property user The username for logging into the database
+ * @property password The password for logging into the database
+ * @property database The name of the database to use
  */
 export interface DatabaseConfig {
   host: string
@@ -28,17 +34,18 @@ export interface DatabaseConfig {
 }
 
 /**
- * @interface AiApiConfig
- * @classDesc Configuration for the AI APIs
+ * Configuration for the AI APIs
+ *
+ * @property googleKey The API key for Google AI API
  */
 export interface AiApiConfig {
   googleKey: string
 }
 
 /**
- * @class ConfigProvider
- * @classDesc Configuration provider for the application
- * @description This class provides configuration for the HTTP server, database connection, and AI APIs
+ * Configuration provider for the application
+ *
+ * This class provides configuration for the HTTP server, database connection, and AI APIs
  */
 @Service()
 export class ConfigProvider {
@@ -47,8 +54,8 @@ export class ConfigProvider {
   private readonly aiApiConfig: AiApiConfig
 
   /**
-   * @constructor
-   * @description Initializes the configuration provider with values from environment variables
+   * Initializes the configuration provider with values from environment variables
+   *
    * @throws {Error} If the GOOGLE_AI_API_KEY environment variable is not set
    */
   public constructor() {
@@ -73,27 +80,26 @@ export class ConfigProvider {
   }
 
   /**
-   * @method provideHttpServerConfig
-   * @description Provides the configuration for the HTTP server
-   * @returns {HttpServerConfig} The configuration for the HTTP server
+   * Provides the configuration for the HTTP server
+   *
+   * @returns The configuration for the HTTP server
    */
   public provideHttpServerConfig(): HttpServerConfig {
     return this.httpServerConfig
   }
 
   /**
-   * @method provideDatabaseConfig
-   * @description Provides the configuration for the database connection
-   * @returns {DatabaseConfig} The configuration for the database connection
+   * Provides the configuration for the database connection
+   *
+   * @returns The configuration for the database connection
    */
   public provideDatabaseConfig(): DatabaseConfig {
     return this.databaseConfig
   }
 
   /**
-   * @method provideAiApiConfig
-   * @description Provides the configuration for the AI APIs
-   * @returns {AiApiConfig} The configuration for the AI APIs
+   * Provides the configuration for the AI APIs
+   * @returns The configuration for the AI APIs
    */
   public provideAiApiConfig(): AiApiConfig {
     return this.aiApiConfig

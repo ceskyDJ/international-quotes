@@ -1,3 +1,10 @@
+/**
+ * @file translatedAuthorName.model.ts
+ * @module models
+ * @author Michal Šmahel (xsmahe01)
+ * @date April 2025
+ */
+
 import {
   Column,
   DataType,
@@ -5,19 +12,17 @@ import {
   Length,
   Model,
   Table,
-  Unique,
 } from "sequelize-typescript"
 
 import { Language } from "./language.model"
 import { Author } from "./author.model"
 
 /**
- * @class TranslatedAuthorName
- * @extends Model
- * @classDesc Virtual model representing a translated name of an author in a specific language (M:N relationship)
- * @property {number} authorId Foreign key referencing the author
- * @property {string} languageAbbreviation Foreign key referencing the language
- * @property {string} fullName Full name of the author in the specified language
+ * Virtual model representing a translated name of an author in a specific language (M:N relationship)
+ *
+ * @property authorId Foreign key referencing the author
+ * @property languageAbbreviation Foreign key referencing the language
+ * @property fullName Full name of the author in the specified language
  */
 @Table({ timestamps: false })
 export class TranslatedAuthorName extends Model {
