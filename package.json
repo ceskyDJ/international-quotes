@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ceskyDJ/international-quotes.git"
+    "url": "git+https://github.com/ceskyDJ/international-quotes-api.git"
   },
   "keywords": [
     "qoutes",
