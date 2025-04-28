@@ -34,6 +34,7 @@ This subsection lists links to related sources to the project, which are used by
 
 This subsection lists links to sources related to the dataset building from Wiki quote pages.
 
+- [Documentation of Wikimedia dumps](https://dumps.wikimedia.org/)
 - [README of `fast-xml-parser`](https://github.com/NaturalIntelligence/fast-xml-parser)
 - [README of `wtf_wikipedia`](https://github.com/spencermountain/wtf_wikipedia)
 - [Pricing of Google language model API](https://ai.google.dev/gemini-api/docs/pricing)
@@ -47,6 +48,13 @@ This subsection lists links to sources related to the API part of the project.
 - [README of `routing-controllers`](https://github.com/typestack/routing-controllers)
 - [README of `class-validator`](https://github.com/typestack/class-validator)
 - [Documentation of `typedi`](https://docs.typestack.community/typedi)
+
+### Documentation
+
+This subsection lists links to sources related to the documentation of the project.
+
+- [Documentation of `typedoc`](https://typedoc.org/modules.html)
+- [README of `typedoc-theme-hierarchy`](https://github.com/DiFuks/typedoc-theme-hierarchy)
 
 ### Used conversations with language models
 
