@@ -29,6 +29,7 @@ This subsection lists links to related sources to the project, which are used by
 - [README of `docker-node`](https://github.com/nodejs/docker-node/blob/main/README.md)
 - Source code of the 1st project to WAP
 - [Article about setting up `ts-node` with `dotenv`](https://medium.com/@drewdrewthis/running-node-typescript-scripts-typedi-decorator-metadata-with-dotenv-env-vars-in-your-nextjs-413374426882)
+- [Documentation of `typedi`](https://docs.typestack.community/typedi)
 
 ### Dataset building
 
@@ -47,7 +48,6 @@ This subsection lists links to sources related to the API part of the project.
 - [Lecture materials for `express`](https://www.fit.vut.cz/study/course/WAP/private/lectures/2025.php?p=backend#/6)
 - [README of `routing-controllers`](https://github.com/typestack/routing-controllers)
 - [README of `class-validator`](https://github.com/typestack/class-validator)
-- [Documentation of `typedi`](https://docs.typestack.community/typedi)
 
 ### Documentation
 
