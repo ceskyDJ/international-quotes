@@ -1,6 +1,4 @@
 /**
- * @file index.ts
- *
  * This file is the entry point for the application. It creates an HTTP server running Express.js
  *
  * @author Michal Šmahel (xsmahe01)
@@ -12,20 +10,25 @@ import { useContainer } from "routing-controllers"
 import { Container } from "typedi"
 
 import { AppBootstrap } from "./app"
-import { ConfigProvider } from "./providers/config.provider"
+import { ConfigProvider, DataSourceProvider } from "./providers"
 
 void (async (): Promise<void> => {
   try {
-    // Setup DI container
+    // Setup DI container for controllers
     useContainer(Container)
 
     // Load configuration
     const configProvider = Container.get(ConfigProvider)
-    const httpServerConfig = configProvider.provideHttpServerConfig()
+    const httpServerConfig = configProvider.provideAppConfig()
+
+    // Initialize database ORM
+    const dataSourceProvider = Container.get(DataSourceProvider)
+    const dataSource = dataSourceProvider.provide()
+    await dataSource.initialize()
 
     // Setup application
     const bootstrap = Container.get(AppBootstrap)
-    const app = await bootstrap.setup()
+    const app = bootstrap.setup()
 
     // Start an HTTP server serving the application
     app.listen(httpServerConfig.port, () => {

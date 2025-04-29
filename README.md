@@ -24,12 +24,13 @@ This subsection lists links to related sources to the project, which are used by
 
 - [README of `nvm-sh`](https://github.com/nvm-sh/nvm)
 - [Documentation of `tsconfig.js`](https://www.typescriptlang.org/tsconfig/)
-- [Documentation of `sequelize`](https://sequelize.org/docs/v6)
-- [Documentation of `sequelize-typescript`](https://www.npmjs.com/package/sequelize-typescript)
 - [README of `docker-node`](https://github.com/nodejs/docker-node/blob/main/README.md)
 - Source code of the 1st project to WAP
 - [Article about setting up `ts-node` with `dotenv`](https://medium.com/@drewdrewthis/running-node-typescript-scripts-typedi-decorator-metadata-with-dotenv-env-vars-in-your-nextjs-413374426882)
 - [Documentation of `typedi`](https://docs.typestack.community/typedi)
+- [Documentation of `typeorm`](https://typeorm.io/)
+- [Article about exceptions (errors, resp.) in TypeScript](https://www.dhiwise.com/post/typescript-error-handling-pitfalls-and-how-to-avoid-them)
+- [Discussion about uniqueness in TypeORM](https://stackoverflow.com/a/66375522)
 
 ### Dataset building
 
@@ -66,8 +67,9 @@ These conversations with a language model were used for observing the project do
 - https://chat.ceskydj.cz/share/RLQkR21M4er5gs7QJsX0R
 - https://chat.ceskydj.cz/share/WsLY4uBDTC6zyWXlLdPlz
 - https://chat.ceskydj.cz/share/4b9TfGb9uIwHm6yEk_wFd
-- https://chat.ceskydj.cz/share/iEMajKWNnRFpNh_ey82kL
 - https://chat.ceskydj.cz/share/EeDqzSiG1QssANaBCRoJb
+- https://chat.ceskydj.cz/share/XVe_JMTs0A661zKMPRG9J
+- https://chat.ceskydj.cz/share/yeLL6npy1cvR7aLKB76jH
 
 
 ## Prepared prompts for processing unstructured data from Wiki quote pages

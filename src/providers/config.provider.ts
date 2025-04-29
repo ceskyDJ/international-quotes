@@ -1,6 +1,4 @@
 /**
- * @file config.provider.ts
- * @module providers
  * @author Michal Šmahel (xsmahe01)
  * @date April 2025
  */
@@ -8,12 +6,14 @@
 import { Service } from "typedi"
 
 /**
- * Configuration for the HTTP server
+ * General configuration for the application (and HTTP server)
  *
- * @property port The port on which the HTTP server will listen
+ * @property port The port on which the HTTP server will listen to
+ * @property devMode Is the application running in development mode?
  */
-export interface HttpServerConfig {
+export interface AppConfig {
   port: number
+  devMode: boolean
 }
 
 /**
@@ -49,7 +49,7 @@ export interface AiApiConfig {
  */
 @Service()
 export class ConfigProvider {
-  private readonly httpServerConfig: HttpServerConfig
+  private readonly appConfig: AppConfig
   private readonly databaseConfig: DatabaseConfig
   private readonly aiApiConfig: AiApiConfig
 
@@ -59,8 +59,9 @@ export class ConfigProvider {
    * @throws {Error} If the GOOGLE_AI_API_KEY environment variable is not set
    */
   public constructor() {
-    this.httpServerConfig = {
+    this.appConfig = {
       port: parseInt(process.env.PORT || "3000"),
+      devMode: process.env.NODE_ENV !== "production",
     }
 
     this.databaseConfig = {
@@ -80,12 +81,12 @@ export class ConfigProvider {
   }
 
   /**
-   * Provides the configuration for the HTTP server
+   * Provides the general application (and HTTP server) configuration
    *
-   * @returns The configuration for the HTTP server
+   * @returns The general configuration for application and HTTP server
    */
-  public provideHttpServerConfig(): HttpServerConfig {
-    return this.httpServerConfig
+  public provideAppConfig(): AppConfig {
+    return this.appConfig
   }
 
   /**
