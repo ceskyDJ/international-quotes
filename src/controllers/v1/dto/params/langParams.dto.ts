@@ -1,6 +1,4 @@
 /**
- * @file langParams.dto.ts
- * @model controllers.v1.dto
  * @author Michal Šmahel (xsmahe01)
  * @date 25th April 2025
  */

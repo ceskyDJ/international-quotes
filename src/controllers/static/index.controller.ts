@@ -1,6 +1,4 @@
 /**
- * @file index.controller.ts
- * @model controllers.static
  * @author Michal Šmahel (xsmahe01)
  * @date 25th April 2025
  */

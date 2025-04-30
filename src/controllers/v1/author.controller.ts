@@ -1,15 +1,15 @@
 /**
- * @file authors.controller.ts
- * @model controllers.v1
  * @author Michal Šmahel (xsmahe01)
  * @date 25th April 2025
  */
 
-import "reflect-metadata"
 import { Service } from "typedi"
 import { Get, JsonController, Params } from "routing-controllers"
-import { Author } from "../../models/author.model"
-import { LangParams } from "./dto/langParams.dto"
+import { plainToInstance } from "class-transformer"
+
+import { AuthorService, LanguageService } from "../../services"
+
+import { LangParams, AuthorResponseDto } from "./dto"
 
 /**
  * Controller for handling author-related requests
@@ -18,14 +18,28 @@ import { LangParams } from "./dto/langParams.dto"
 @Service()
 export class AuthorController {
   /**
+   * Constructor for the AuthorController
+   *
+   * @param authorService Service for handling author-related operations (dependency)
+   * @param languageService Service for handling language-related operations (dependency)
+   */
+  public constructor(
+    private readonly authorService: AuthorService,
+    private readonly languageService: LanguageService,
+  ) {}
+
+  /**
    * Lists all authors that we have quotes for (at least 1 quote)
    *
    * @returns List of authors
    */
   @Get("/")
-  public getAllAuthors(): Author[] {
-    console.log("Fetching all authors...")
-    return []
+  public async getAllAuthors(): Promise<AuthorResponseDto[]> {
+    const authors = await this.authorService.fetchAll()
+
+    return plainToInstance(AuthorResponseDto, authors, {
+      excludeExtraneousValues: true,
+    })
   }
 
   /**
@@ -35,8 +49,17 @@ export class AuthorController {
    * @returns List of authors
    */
   @Get("/:langAbbr")
-  public getAuthorsByLanguage(@Params() params: LangParams): Author[] {
-    console.log(`Fetching authors for language: ${params.langAbbr}...`)
-    return []
+  public async getAuthorsByLanguage(
+    @Params() params: LangParams,
+  ): Promise<AuthorResponseDto[]> {
+    const language = await this.languageService.fetchByAbbreviation(
+      params.langAbbr,
+    )
+
+    const authors = await this.authorService.fetchAllByLanguage(language)
+
+    return plainToInstance(AuthorResponseDto, authors, {
+      excludeExtraneousValues: true,
+    })
   }
 }

@@ -1,6 +1,4 @@
 /**
- * @file langAndAuthorParams.dto.ts
- * @model controllers.v1.dto
  * @author Michal Šmahel (xsmahe01)
  * @date 25th April 2025
  */
@@ -23,5 +21,5 @@ export class LangAndAuthorParams {
   @Min(1)
   @IsInt()
   @Type(() => Number)
-  authorId!: string
+  authorId!: number
 }
