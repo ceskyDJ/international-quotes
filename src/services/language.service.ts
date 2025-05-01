@@ -63,8 +63,9 @@ export class LanguageService {
    * Saves the language to the database
    *
    * @param language Language to save
+   * @returns Saved language (initialized by ORM)
    */
-  public async save(language: Language): Promise<void> {
-    await this.languageRepository.save(language)
+  public async save(language: Language): Promise<Language> {
+    return await this.languageRepository.save(language)
   }
 }

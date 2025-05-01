@@ -17,6 +17,7 @@ import { NotFoundError } from "./errors/notFound.error"
 @Service()
 export class AuthorService {
   private readonly authorRepository: Repository<Author>
+  private readonly translatedAuthorNameRepository: Repository<TranslatedAuthorName>
   private readonly quoteRepository: Repository<Quote>
 
   /**
@@ -28,6 +29,8 @@ export class AuthorService {
     const dataSource = dataSourceProvider.provide()
 
     this.authorRepository = dataSource.getRepository(Author)
+    this.translatedAuthorNameRepository =
+      dataSource.getRepository(TranslatedAuthorName)
     this.quoteRepository = dataSource.getRepository(Quote)
   }
 
@@ -129,9 +132,10 @@ export class AuthorService {
    * Saves author to the database
    *
    * @param author Author to save
+   * @returns Saved author (initialized by ORM)
    */
-  public async save(author: Author): Promise<void> {
-    await this.authorRepository.save(author)
+  public async save(author: Author): Promise<Author> {
+    return await this.authorRepository.save(author)
   }
 
   /**
@@ -148,8 +152,13 @@ export class AuthorService {
   ): Promise<void> {
     const translatedName = new TranslatedAuthorName(fullName, author, language)
 
-    author.translatedFullNames.push(translatedName)
+    if (author.translatedFullNames === undefined) {
+      author.translatedFullNames = [translatedName]
+    } else {
+      author.translatedFullNames.push(translatedName)
+    }
 
+    await this.translatedAuthorNameRepository.save(translatedName)
     await this.authorRepository.save(author)
   }
 }

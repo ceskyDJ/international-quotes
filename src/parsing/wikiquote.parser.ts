@@ -124,18 +124,18 @@ export class WikiquoteParser {
     page: WikiPage,
     language: Language,
   ): Promise<Quote[]> {
-    try {
-      // Get author of quotes on this page
-      const author = await this.parseAuthor(page, language)
+    // Get author of quotes on this page
+    const author = await this.parseAuthor(page, language)
 
-      // Let the content parser parse the text of the page and extract quotes
-      const contentParser = this.contentParsers[language.abbreviation]
-
-      return await contentParser.parse(page.revision.text, author, language)
-    } catch {
-      // This is a different type of page that needs to be skipped
+    // Skip pages that are not focused on some author
+    if (author === null) {
       return []
     }
+
+    // Let the content parser parse the text of the page and extract quotes
+    const contentParser = this.contentParsers[language.abbreviation]
+
+    return await contentParser.parse(page.revision.text, author, language)
   }
 
   /**
@@ -143,12 +143,12 @@ export class WikiquoteParser {
    *
    * @param page Page to parse
    * @param language Language of the page
-   * @returns Parsed author
+   * @returns Parsed author or null if there is not a human name in page title
    */
   private async parseAuthor(
     page: WikiPage,
     language: Language,
-  ): Promise<Author> {
+  ): Promise<Author | null> {
     // Load (potentially, as it could be a different type of page) author of
     // quotes on this page
     const potentialAuthorName = page.title
@@ -159,7 +159,7 @@ export class WikiquoteParser {
     // It means that the page title is a human name
     // In case it wasn't a human name, normalizer returned null
     if (normalizedAuthorName === null) {
-      throw new Error("Page title is not a human name")
+      return null
     }
 
     // Get or create an author's entity
@@ -170,9 +170,7 @@ export class WikiquoteParser {
         await this.authorService.fetchByEnglishFullName(normalizedAuthorName)
     } catch {
       // If the author is not in the database, we need to add it
-      author = new Author(normalizedAuthorName)
-
-      await this.authorService.save(author)
+      author = await this.authorService.save(new Author(normalizedAuthorName))
     }
 
     // Add a translated full name (original name from the page's title) to the author

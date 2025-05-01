@@ -33,10 +33,10 @@ export class Author extends BaseEntity {
     () => TranslatedAuthorName,
     (translatedAuthorName) => translatedAuthorName.author,
   )
-  translatedFullNames!: TranslatedAuthorName[]
+  translatedFullNames?: TranslatedAuthorName[]
 
   @OneToMany(() => Quote, (quote) => quote.author)
-  quotes!: Quote[]
+  quotes?: Quote[]
 
   /**
    * Constructor for the Author class

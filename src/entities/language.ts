@@ -32,13 +32,13 @@ export class Language extends BaseEntity {
   nativeName!: string
 
   @OneToMany(() => Quote, (quote) => quote.language)
-  quotes!: Quote[]
+  quotes?: Quote[]
 
   @OneToMany(
     () => TranslatedAuthorName,
     (translatedAuthorName) => translatedAuthorName.language,
   )
-  translatedFullNames!: TranslatedAuthorName[]
+  translatedFullNames?: TranslatedAuthorName[]
 
   /**
    * Constructor for the Language class
