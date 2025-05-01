@@ -19,11 +19,14 @@ import { ContentParser, CzechParser } from "./content"
  * Only relevant parts of the original XML are included!
  *
  * @property title Title of the page
+ * @property redirect Present if the page is a redirect (empty string)
  * @property revision Revision of the page (like a snapshot of the page)
  * @property revision.text Text of the page (in original mediawiki format)
  */
 interface WikiPage {
   title: string
+
+  redirect?: ""
 
   revision: {
     text: string
@@ -99,6 +102,11 @@ export class WikiquoteParser {
 
     // Parse quotes from pages (usually a page contains quotes of one author)
     for (const page of parsedWikiDump.mediawiki.page) {
+      // Skip pages that are just aliases (provides redirects)
+      if (page.redirect === "") {
+        continue
+      }
+
       quotes.concat(await this.parsePage(page, language))
     }
 
