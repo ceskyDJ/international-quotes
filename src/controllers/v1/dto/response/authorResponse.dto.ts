@@ -5,6 +5,12 @@
 
 import { Expose, Type } from "class-transformer"
 
+/**
+ * Response DTO for translated full name of an author
+ *
+ * @property fullName Translated full name of the author
+ * @property languageAbbreviation Abbreviation of the language in which the full name is provided
+ */
 export class TranslatedFullNameDto {
   @Expose()
   fullName!: string
@@ -13,6 +19,13 @@ export class TranslatedFullNameDto {
   languageAbbreviation!: string
 }
 
+/**
+ * Response DTO for author
+ *
+ * @property id Database identifier of the author (used for selecting author in some endpoints)
+ * @property englishFullName Full name of the author in English
+ * @property translatedFullNames List of translated full names of the author
+ */
 export class AuthorResponseDto {
   @Expose()
   id!: number

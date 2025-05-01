@@ -9,8 +9,8 @@ import { Type } from "class-transformer"
 /**
  * DTO for validating language and author parameters
  *
- * @property {string} langAbbr Language abbreviation (2 lowercase letters)
- * @property {number} authorId Author ID (integer)
+ * @property langAbbr Language abbreviation (2 lowercase letters)
+ * @property authorId Author ID (integer)
  */
 export class LangAndAuthorParams {
   @Length(2, 2)

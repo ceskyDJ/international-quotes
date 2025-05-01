@@ -8,7 +8,7 @@ import { IsAlpha, IsLowercase, Length } from "class-validator"
 /**
  * DTO for validating language parameter
  *
- * @property {string} langAbbr Language abbreviation (2 lowercase letters)
+ * @property langAbbr Language abbreviation (2 lowercase letters)
  */
 export class LangParams {
   @Length(2, 2)
