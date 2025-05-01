@@ -29,7 +29,16 @@ export class AppBootstrap {
 
     // Apply middlewares
     app.use(cors())
-    app.use(helmet())
+    app.use(
+      helmet({
+        contentSecurityPolicy: {
+          useDefaults: true,
+          directives: {
+            "script-src": ["'self'", "https://cdnjs.cloudflare.com"],
+          },
+        },
+      }),
+    )
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({ extended: true }))
 

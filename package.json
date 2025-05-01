@@ -11,7 +11,8 @@
     "dev:db": "docker compose --file docker-compose.dev.yml up",
     "lint": "npx eslint --fix ./src --ext src/**/*.ts",
     "doc": "npx typedoc --out ./doc --entryPoints ./src --entryPointStrategy Expand --plugin typedoc-theme-hierarchy --plugin typedoc-plugin-mdn-links --plugin typedoc-plugin-dt-links --excludeExternals --theme hierarchy",
-    "pack": "npm run doc && rm xsmahe01.zip && zip -r xsmahe01.zip ./doc/ ./docker/ ./public/ ./src/ .env.example docker-compose.yml package.json package-lock.json tsconfig.json README.md"
+    "pack": "npm run doc && rm xsmahe01.zip && zip -r xsmahe01.zip ./doc/ ./docker/ ./public/ ./src/ .env.example docker-compose.yml package.json package-lock.json tsconfig.json README.md",
+    "integrity-hashes": "echo 'script.js: sha512-'$(cat public/js/script.js | openssl dgst -sha512 -binary | openssl base64 -A) && echo 'style.css: sha512-'$(cat public/css/style.css | openssl dgst -sha512 -binary | openssl base64 -A)"
   },
   "repository": {
     "type": "git",

@@ -57,6 +57,15 @@ This subsection lists links to sources related to the documentation of the proje
 - [Documentation of `typedoc`](https://typedoc.org/modules.html)
 - [README of `typedoc-theme-hierarchy`](https://github.com/DiFuks/typedoc-theme-hierarchy)
 
+# Static index page
+
+The subsection lists links to sources related to the static index page of the project:
+
+- [StackOverflow discussion about CORS with `helmet`](https://stackoverflow.com/a/69902361)
+- [SRI Hash Generator](https://www.srihash.org/)
+- [MDN web docs about resource integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity)
+- [Anthropic's documentation about language models](https://docs.anthropic.com/en/docs/about-claude/models/all-models#model-comparison-table)
+
 ### Used conversations with language models
 
 These conversations with a language model were used for observing the project domain and solving some problems:
