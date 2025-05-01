@@ -58,4 +58,13 @@ export class LanguageService {
 
     return language
   }
+
+  /**
+   * Saves the language to the database
+   *
+   * @param language Language to save
+   */
+  public async save(language: Language): Promise<void> {
+    await this.languageRepository.save(language)
+  }
 }

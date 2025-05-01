@@ -11,6 +11,8 @@ import { Container } from "typedi"
 
 import { AppBootstrap } from "./app"
 import { ConfigProvider, DataSourceProvider } from "./providers"
+import { QuoteService } from "./services"
+import { WikiquoteParser } from "./parsing"
 
 void (async (): Promise<void> => {
   try {
@@ -25,6 +27,17 @@ void (async (): Promise<void> => {
     const dataSourceProvider = Container.get(DataSourceProvider)
     const dataSource = dataSourceProvider.provide()
     await dataSource.initialize()
+
+    // Prepare data to be served by application (if needed)
+    const quoteService = Container.get(QuoteService)
+    if ((await quoteService.count()) === 0) {
+      const wikiQuoteParser = Container.get(WikiquoteParser)
+      const quotes = await wikiQuoteParser.parseWikiDump(
+        `${__dirname}/../dumps/cswikiquote-20250320-pages-meta-current.xml`,
+      )
+
+      await quoteService.saveAll(quotes)
+    }
 
     // Setup application
     const bootstrap = Container.get(AppBootstrap)

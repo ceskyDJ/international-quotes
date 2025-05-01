@@ -140,4 +140,20 @@ export class QuoteService {
 
     return quote
   }
+
+  /**
+   * Counts the number of quotes in the database
+   */
+  public async count(): Promise<number> {
+    return this.quoteRepository.count()
+  }
+
+  /**
+   * Saves a list of quotes to the database
+   *
+   * @param quotes List of quotes to save
+   */
+  public async saveAll(quotes: Quote[]): Promise<void> {
+    await this.quoteRepository.save(quotes)
+  }
 }

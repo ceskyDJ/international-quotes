@@ -32,4 +32,19 @@ export class TranslatedAuthorName extends BaseEntity {
 
   @PrimaryColumn({ type: "char", length: 2 })
   languageAbbreviation!: string
+
+  /**
+   * Constructor for the TranslatedAuthorName class
+   *
+   * @param fullName Translated full name of the author
+   * @param author Author whose name is being translated
+   * @param language Language the author's name is translated to
+   */
+  public constructor(fullName: string, author: Author, language: Language) {
+    super()
+
+    this.fullName = fullName
+    this.author = author
+    this.language = language
+  }
 }

@@ -37,4 +37,15 @@ export class Author extends BaseEntity {
 
   @OneToMany(() => Quote, (quote) => quote.author)
   quotes!: Quote[]
+
+  /**
+   * Constructor for the Author class
+   *
+   * @param englishFullName Full name of the author in English
+   */
+  public constructor(englishFullName: string) {
+    super()
+
+    this.englishFullName = englishFullName
+  }
 }

@@ -40,6 +40,8 @@ This subsection lists links to sources related to the dataset building from Wiki
 - [README of `fast-xml-parser`](https://github.com/NaturalIntelligence/fast-xml-parser)
 - [README of `wtf_wikipedia`](https://github.com/spencermountain/wtf_wikipedia)
 - [Pricing of Google language model API](https://ai.google.dev/gemini-api/docs/pricing)
+- [Documentation of Google AI API](https://googleapis.github.io/js-genai/main/index.html)
+- [Article about type for associative array in TypeScript](https://www.geeksforgeeks.org/how-to-use-associative-array-in-typescript/)
 
 ### API
 

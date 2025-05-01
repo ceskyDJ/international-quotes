@@ -7,7 +7,7 @@ import { Service } from "typedi"
 import { Repository } from "typeorm"
 
 import { DataSourceProvider } from "../providers"
-import { Author, Language, Quote } from "../entities"
+import { Author, Language, Quote, TranslatedAuthorName } from "../entities"
 
 import { NotFoundError } from "./errors/notFound.error"
 
@@ -98,5 +98,58 @@ export class AuthorService {
     }
 
     return author
+  }
+
+  /**
+   * Fetches author by English full name
+   *
+   * @param englishFullName Author's English full name
+   * @returns Found author that has the given English full name
+   * @throws NotFoundError If the author with the given English full name does not exist in the database
+   */
+  public async fetchByEnglishFullName(
+    englishFullName: string,
+  ): Promise<Author> {
+    const author = await this.authorRepository.findOne({
+      where: {
+        englishFullName: englishFullName,
+      },
+    })
+
+    if (author === null) {
+      throw new NotFoundError(
+        `Author with English full name ${englishFullName} not found`,
+      )
+    }
+
+    return author
+  }
+
+  /**
+   * Saves author to the database
+   *
+   * @param author Author to save
+   */
+  public async save(author: Author): Promise<void> {
+    await this.authorRepository.save(author)
+  }
+
+  /**
+   * Adds a translated full name to the author
+   *
+   * @param author Author to add the translated full name to
+   * @param language Language the full name is translated to
+   * @param fullName Translated full name
+   */
+  public async addTranslatedFullName(
+    author: Author,
+    language: Language,
+    fullName: string,
+  ): Promise<void> {
+    const translatedName = new TranslatedAuthorName(fullName, author, language)
+
+    author.translatedFullNames.push(translatedName)
+
+    await this.authorRepository.save(author)
   }
 }

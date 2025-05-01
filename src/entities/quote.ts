@@ -55,4 +55,29 @@ export class Quote extends BaseEntity {
 
   @ManyToOne(() => Language, (language) => language.quotes)
   language!: Language
+
+  /**
+   * Constructor for the Quote class
+   *
+   * @param text The text of the quote
+   * @param source URL of the Wiki quote page where the quote was found (due to license)
+   * @param score Score given by a language model (from 0 to 100)
+   * @param author The author of the quote
+   * @param language The language of the quote
+   */
+  public constructor(
+    text: string,
+    source: string,
+    score: number,
+    author: Author,
+    language: Language,
+  ) {
+    super()
+
+    this.text = text
+    this.source = source
+    this.score = score
+    this.author = author
+    this.language = language
+  }
 }

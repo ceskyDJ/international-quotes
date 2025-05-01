@@ -39,4 +39,23 @@ export class Language extends BaseEntity {
     (translatedAuthorName) => translatedAuthorName.language,
   )
   translatedFullNames!: TranslatedAuthorName[]
+
+  /**
+   * Constructor for the Language class
+   *
+   * @param abbreviation Abbreviation of the language (e.g., "cs" for Czech)
+   * @param englishName Full name of the language in English (e.g., "Czech")
+   * @param nativeName Full name of the language in its native form (e.g., "Čeština")
+   */
+  public constructor(
+    abbreviation: string,
+    englishName: string,
+    nativeName: string,
+  ) {
+    super()
+
+    this.abbreviation = abbreviation
+    this.englishName = englishName
+    this.nativeName = nativeName
+  }
 }
