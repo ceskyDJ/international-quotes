@@ -40,6 +40,7 @@ export interface ParsedQuote {
 @Service()
 export class QuoteParser {
   private readonly MODEL_NAME = "gemini-2.5-flash-preview-04-17"
+  private readonly MAX_RETRIES = 3
 
   private readonly googleAi: GoogleGenAI
 
@@ -120,12 +121,34 @@ Lucius Annaeus Seneca: "Svolného osud vede, zpurného vleče. (Volentem fata du
       ],
     }
 
-    const response = await this.googleAi.models.generateContent({
-      model: this.MODEL_NAME,
-      config: config,
-      contents: `${author}: "${quote}"`,
-    })
+    // Try to get answer from the AI model
+    // Sometimes, there could be some error on the server side, so multiple attempts are used
+    let response
+    for (let i = 0; i < this.MAX_RETRIES; i++) {
+      try {
+        response = await this.googleAi.models.generateContent({
+          model: this.MODEL_NAME,
+          config: config,
+          contents: `${author}: "${quote}"`,
+        })
 
+        break
+      } catch {
+        // Ignore errors and try again after a short delay
+        // d = a^2 seconds (d = delay, a = attempt number indexed from 1)
+        // Source: https://stackoverflow.com/a/49139664
+        await new Promise((resolve) => setTimeout(resolve, 1000 * (i + 1) ** 2))
+      }
+    }
+
+    // Check if we got a response
+    if (response === undefined) {
+      throw new Error(
+        `No response arrived from language model after ${String(this.MAX_RETRIES)} attempts.`,
+      )
+    }
+
+    // Check if a language model returned some text
     if (response.text === undefined) {
       throw new Error(
         `No text response arrived from language model. Details: ${JSON.stringify(response)}`,
