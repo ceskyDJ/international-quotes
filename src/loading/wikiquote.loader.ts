@@ -8,10 +8,8 @@ import { readFileSync } from "node:fs"
 import { Service } from "typedi"
 
 import { Author, Language, Quote } from "../entities"
-import { AuthorService, LanguageService } from "../services"
-
-import { AuthorNameParser } from "./ai"
-import { ContentParser, CzechParser } from "./content"
+import { AuthorService, LanguageService, QuoteService } from "../services"
+import { AuthorNameParser, ContentParser, CzechParser } from "../parsing"
 
 /**
  * Interface for typing a single page from the wiki dump
@@ -57,7 +55,7 @@ interface WikiDump {
  * It parses the wiki dump and extracts quotes from it
  */
 @Service()
-export class WikiquoteParser {
+export class WikiquoteLoader {
   private readonly contentParsers: { [key: string]: ContentParser }
 
   /**
@@ -65,12 +63,14 @@ export class WikiquoteParser {
    *
    * @param languageService Language service (dependency)
    * @param authorService Author service (dependency)
+   * @param quoteService Quote service (dependency)
    * @param authorNameParser Author name parser (dependency)
    * @param czechParser Czech parser (dependency)
    */
   public constructor(
     private readonly languageService: LanguageService,
     private readonly authorService: AuthorService,
+    private readonly quoteService: QuoteService,
     private readonly authorNameParser: AuthorNameParser,
     czechParser: CzechParser,
   ) {
@@ -80,15 +80,12 @@ export class WikiquoteParser {
   }
 
   /**
-   * Parses the wiki dump and extracts quotes from it
+   * Loads quotes from the wiki dump file into the database
    *
    * @param path Path to the wiki dump file
-   * @returns List of quotes from the wiki dump
    */
-  public async parseWikiDump(path: string): Promise<Quote[]> {
-    let quotes: Quote[] = []
-
-    console.log(`[INFO] Parsing wiki dump ${path}...`)
+  public async loadQuotesFromWikiDump(path: string): Promise<void> {
+    console.log(`[INFO] Loading quotes from wiki dump ${path}...`)
 
     const rawWikiDump = readFileSync(path, "utf-8")
 
@@ -105,18 +102,30 @@ export class WikiquoteParser {
     console.log(`[INFO] Detected language: ${language.englishName}`)
 
     // Parse quotes from pages (usually a page contains quotes of one author)
+    let totalQuotes = 0
     for (const page of parsedWikiDump.mediawiki.page) {
       // Skip pages that are just aliases (provides redirects)
       if (page.redirect === "") {
         continue
       }
 
-      quotes = quotes.concat(await this.parsePage(page, language))
+      // Parse quotes and save them to the database
+      const quotes = await this.parsePage(page, language)
+      await this.quoteService.saveAll(quotes)
+
+      const numberOfQuotesPerAuthor = quotes.length
+      if (numberOfQuotesPerAuthor === 0) {
+        console.log(`[WARNING] No relevant quotes found for page ${page.title}`)
+      } else {
+        console.log(
+          `[INFO] Loaded ${String(numberOfQuotesPerAuthor)} quotes by ${quotes[0].author.englishFullName}`,
+        )
+      }
+
+      totalQuotes += numberOfQuotesPerAuthor
     }
 
-    console.log(`[INFO] Successfully processed ${String(quotes.length)} quotes`)
-
-    return quotes
+    console.log(`[INFO] Successfully processed ${String(totalQuotes)} quotes`)
   }
 
   /**

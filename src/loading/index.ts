@@ -3,5 +3,4 @@
  * @date 25th April 2025
  */
 
-export * from "./ai"
-export * from "./content"
+export { WikiquoteLoader } from "./wikiquote.loader"
