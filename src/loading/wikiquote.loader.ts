@@ -4,7 +4,7 @@
  */
 
 import { XMLParser } from "fast-xml-parser"
-import { readFileSync } from "node:fs"
+import { readFileSync, realpathSync } from "node:fs"
 import { Service } from "typedi"
 
 import { Author, Language, Quote } from "../entities"
@@ -85,7 +85,8 @@ export class WikiquoteLoader {
    * @param path Path to the wiki dump file
    */
   public async loadQuotesFromWikiDump(path: string): Promise<void> {
-    console.log(`[INFO] Loading quotes from wiki dump ${path}...`)
+    const realPath = realpathSync(path)
+    console.log(`[INFO] Loading quotes from wiki dump ${realPath}...`)
 
     const rawWikiDump = readFileSync(path, "utf-8")
 
