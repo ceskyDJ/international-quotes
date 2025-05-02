@@ -57,6 +57,7 @@ interface Sentence {
 @Service()
 export class CzechParser extends ContentParser {
   private readonly forbiddenPagePrefixes: string[] = [
+    "MediaWiki:",
     "Wikicitáty:",
     "Uživatel:",
     "Kategorie:",
