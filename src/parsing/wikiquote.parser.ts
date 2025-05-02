@@ -88,6 +88,8 @@ export class WikiquoteParser {
   public async parseWikiDump(path: string): Promise<Quote[]> {
     let quotes: Quote[] = []
 
+    console.log(`[INFO] Parsing wiki dump ${path}...`)
+
     const rawWikiDump = readFileSync(path, "utf-8")
 
     // Parse the XML data into an object format
@@ -100,6 +102,8 @@ export class WikiquoteParser {
     const language =
       await this.languageService.fetchByAbbreviation(languageAbbreviation)
 
+    console.log(`[INFO] Detected language: ${language.englishName}`)
+
     // Parse quotes from pages (usually a page contains quotes of one author)
     for (const page of parsedWikiDump.mediawiki.page) {
       // Skip pages that are just aliases (provides redirects)
@@ -109,6 +113,8 @@ export class WikiquoteParser {
 
       quotes = quotes.concat(await this.parsePage(page, language))
     }
+
+    console.log(`[INFO] Successfully processed ${String(quotes.length)} quotes`)
 
     return quotes
   }
@@ -137,6 +143,8 @@ export class WikiquoteParser {
 
     // Let the content parser parse the text of the page and extract quotes
     const contentParser = this.contentParsers[language.abbreviation]
+
+    console.log(`[INFO] Processing quotes by ${author.englishFullName}...`)
 
     return await contentParser.parse(
       pageUrl,
