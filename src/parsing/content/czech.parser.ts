@@ -148,7 +148,12 @@ export class CzechParser extends ContentParser {
 
         // Skip quote candidates that are not likely to be quotes
         // or not good enough
-        if (parsedQuote.score <= 50) {
+        if (parsedQuote.score <= 50 || parsedQuote.cleanQuote?.trim() === "") {
+          continue
+        }
+
+        // Skip too long quotes
+        if ((parsedQuote.cleanQuote?.length ?? 0) > 500) {
           continue
         }
 
