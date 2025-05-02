@@ -135,6 +135,14 @@ Lucius Annaeus Seneca: "Svolného osud vede, zpurného vleče. (Volentem fata du
           contents: `${author}: "${quote}"`,
         })
 
+        // Check if the response content is valid
+        if (response.text === undefined) {
+          // Response without text is similar to no response at all, so we
+          // simulate communication error (using locally caught error) to retry
+          // noinspection ExceptionCaughtLocallyJS
+          throw new Error()
+        }
+
         break
       } catch {
         // Ignore errors and try again after a short delay
