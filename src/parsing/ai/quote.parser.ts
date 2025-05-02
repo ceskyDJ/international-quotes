@@ -13,6 +13,25 @@ import { ConfigProvider } from "../../providers"
  */
 interface AiResponse {
   score: number
+
+  cleanQuote?: string
+}
+
+/**
+ * Cleaned quote with score from the AI model
+ *
+ * Sometimes, the quote text contains more variants (in different languages)
+ * of the same quote or other text that do not correspond with the quote.
+ * This is resolved by a language model, which cleans the quote and returns
+ * just a single variant of the pronounced text.
+ *
+ * @property score The score of the quote (from 0 to 100)
+ * @property cleanQuote The cleaned quote (if the score is not 0)
+ */
+export interface ParsedQuote {
+  score: number
+
+  cleanQuote?: string
 }
 
 /**
@@ -49,7 +68,7 @@ export class QuoteParser {
    * @param quote The quote to be scored
    * @returns The score of the quote
    */
-  public async scoreQuote(author: string, quote: string): Promise<number> {
+  public async parseQuote(author: string, quote: string): Promise<ParsedQuote> {
     const config = {
       temperature: 0,
       topP: 1,
@@ -61,18 +80,25 @@ export class QuoteParser {
           score: {
             type: Type.INTEGER,
           },
+          cleanQuote: {
+            type: Type.STRING,
+          },
         },
       },
       systemInstruction: [
         {
-          text: `You are an international expert focused on quotes. You will get quotes in different languages and aim to score their correctness and contribution to society using a single integer from 0 to 100. You can measure the contribution value according to the quote's popularity (or its variants in other languages), penalizing very long quotes, as people often skip reading for their complexity. Construct output as a JSON object with a single property called score, where the quote score will be placed.
+          text: `You are an international expert focused on quotes. You will get quotes in different languages and aim to score their correctness and contribution to society using a single integer from 0 to 100. You can measure the contribution value according to the quote's popularity (or its variants in other languages), penalizing very long quotes, as people often skip reading for their complexity.
+
+Construct output as a JSON object with these two properties:
+- score—integer, which is set to the quote score you gave to the quote.
+- cleanQuote—string, where you put the quote cleaned of other variants of the quote (in different languages) and other text not corresponding to the quote, if the score isn't zero.
 
 Here is an example of a standard input:
 <input>
 Oscar Wilde: "Be yourself; everyone else is already taken."
 </input>
 <output>
-{"score":95}
+{"score":95,"cleanQuote":"Be yourself; everyone else is already taken."}
 </output>
 
 Sometimes, you get a text that is structured as a quote (Author name: "Some text here"), but the text in quotes isn't a quote of some person but just some random (e.g., descriptive) text. This means the input is wrong (the text was wrongly classified as a quote). In this case, return 0 as an output. An example could look like this:
@@ -83,12 +109,12 @@ Dante Alighieri: "Libri iii, Caput XIII, (XV.) emendati Johann Heinrich F. Karl 
 {"score":0}
 </output>
 
-When the quote is correct and valuable for society, but the author isn't correct, return 0 as a score. An example could look like this:
+When the quote contains other language variants or something that does not correspond with the quote, you need to clean the quote. An example could look like this:
 <input>
-Albert Einstein: "Je-li nepořádek na stole odrazem nepořádku v mysli, co potom odráží prázdný stůl?"
+Lucius Annaeus Seneca: "Svolného osud vede, zpurného vleče. (Volentem fata ducunt, nolentem trahunt.)"
 </input>
 <output>
-{"score":0}
+{"score":92,"cleanQuote":"Svolného osud vede, zpurného vleče."}
 </output>`,
         },
       ],
@@ -108,6 +134,9 @@ Albert Einstein: "Je-li nepořádek na stole odrazem nepořádku v mysli, co pot
 
     const parsedResponse = JSON.parse(response.text) as AiResponse
 
-    return parsedResponse.score
+    return {
+      score: parsedResponse.score,
+      cleanQuote: parsedResponse.cleanQuote,
+    }
   }
 }

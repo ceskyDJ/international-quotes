@@ -12,6 +12,7 @@ export abstract class ContentParser {
   /**
    * Parses the content of a wiki page and returns a list of obtained quotes
    *
+   * @param pageUrl URL of the wiki page (for source attribution)
    * @param pageContent Content of the wiki page (in original mediawiki format)
    * @param author Author associated with the wiki page
    * @param language Language of the wiki page
@@ -19,6 +20,7 @@ export abstract class ContentParser {
    * @returns List of quotes
    */
   public abstract parse(
+    pageUrl: string,
     pageContent: string,
     author: Author,
     language: Language,

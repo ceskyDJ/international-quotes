@@ -86,7 +86,7 @@ export class WikiquoteParser {
    * @returns List of quotes from the wiki dump
    */
   public async parseWikiDump(path: string): Promise<Quote[]> {
-    const quotes: Quote[] = []
+    let quotes: Quote[] = []
 
     const rawWikiDump = readFileSync(path, "utf-8")
 
@@ -107,7 +107,7 @@ export class WikiquoteParser {
         continue
       }
 
-      quotes.concat(await this.parsePage(page, language))
+      quotes = quotes.concat(await this.parsePage(page, language))
     }
 
     return quotes
@@ -132,10 +132,18 @@ export class WikiquoteParser {
       return []
     }
 
+    // Compose the page URL
+    const pageUrl = `https://${language.abbreviation}.wikiquote.org/wiki/${page.title}`
+
     // Let the content parser parse the text of the page and extract quotes
     const contentParser = this.contentParsers[language.abbreviation]
 
-    return await contentParser.parse(page.revision.text, author, language)
+    return await contentParser.parse(
+      pageUrl,
+      page.revision.text,
+      author,
+      language,
+    )
   }
 
   /**
