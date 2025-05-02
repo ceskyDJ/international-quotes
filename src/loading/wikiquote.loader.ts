@@ -109,6 +109,12 @@ export class WikiquoteLoader {
         continue
       }
 
+      // Skip pages that are not relevant for us (has one of the forbidden prefixes)
+      const localizedParser = this.contentParsers[languageAbbreviation]
+      if (localizedParser.isForbiddenPageName(page.title)) {
+        continue
+      }
+
       // Parse quotes and save them to the database
       const quotes = await this.parsePage(page, language)
       await this.quoteService.saveAll(quotes)

@@ -10,6 +10,17 @@ import { Author, Quote, Language } from "../../entities"
  */
 export abstract class ContentParser {
   /**
+   * Checks if the wiki page title starts with the prefix of forbidden pages
+   *
+   * Prefixes are specific for each language, so a parser for each language needs to
+   * provide a list for its own language.
+   *
+   * @param pageTitle Page title of the wiki page to check
+   * @returns Is the page title corresponding to a forbidden page?
+   */
+  public abstract isForbiddenPageName(pageTitle: string): boolean
+
+  /**
    * Parses the content of a wiki page and returns a list of obtained quotes
    *
    * @param pageUrl URL of the wiki page (for source attribution)

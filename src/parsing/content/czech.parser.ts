@@ -56,6 +56,19 @@ interface Sentence {
  */
 @Service()
 export class CzechParser extends ContentParser {
+  private readonly forbiddenPagePrefixes: string[] = [
+    "Wikicitáty:",
+    "Uživatel:",
+    "Kategorie:",
+    "Diskuse:",
+    "Diskuse ke kategorii:",
+    "Diskuse s uživatelem:",
+    "Nápověda:",
+    "Speciální:",
+    "Dílo:",
+  ]
+  private readonly forbiddenPagePrefixesRegex: RegExp
+
   /**
    * Constructor for CzechParser
    *
@@ -63,6 +76,24 @@ export class CzechParser extends ContentParser {
    */
   public constructor(private readonly quoteParser: QuoteParser) {
     super()
+
+    // Create a regex from the list of forbidden page prefixes for faster checking
+    this.forbiddenPagePrefixesRegex = new RegExp(
+      "^(" + this.forbiddenPagePrefixes.join("|") + ").*",
+    )
+  }
+
+  /**
+   * Checks if the wiki page title starts with the prefix of forbidden pages
+   *
+   * Prefixes are specific for each language, so a parser for each language needs to
+   * provide a list for its own language.
+   *
+   * @param pageTitle Page title of the wiki page to check
+   * @returns Is the page title corresponding to a forbidden page?
+   */
+  public isForbiddenPageName(pageTitle: string): boolean {
+    return this.forbiddenPagePrefixesRegex.test(pageTitle)
   }
 
   /**
