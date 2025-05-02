@@ -86,6 +86,9 @@ export class QuoteParser {
           },
         },
       },
+      thinkingConfig: {
+        thinkingBudget: 0,
+      },
       systemInstruction: [
         {
           text: `You are an international expert focused on quotes. You will get quotes in different languages and aim to score their correctness and contribution to society using a single integer from 0 to 100. You can measure the contribution value according to the quote's popularity (or its variants in other languages), penalizing very long quotes, as people often skip reading for their complexity.

@@ -69,6 +69,9 @@ export class AuthorNameParser {
           },
         },
       },
+      thinkingConfig: {
+        thinkingBudget: 0,
+      },
       systemInstruction: [
         {
           text: `You are a professional international linguist. You aim to decide whether the provided text sequence in different languages is a human name or something else (e.g., an object name or a verb). You have to form your output as a valid JSON object with two properties:
