@@ -22,7 +22,7 @@ interface AiResponse {
 @Service()
 export class AuthorNameParser {
   private readonly MODEL_NAME = "gemini-2.5-flash-preview-04-17"
-  private readonly MAX_RETRIES = 5
+  private readonly MAX_RETRIES = 3
 
   private readonly googleAi: GoogleGenAI
 
