@@ -98,6 +98,11 @@ export class QuoteParser {
    * @returns The score of the quote
    */
   public async parseQuote(author: string, quote: string): Promise<ParsedQuote> {
+    // Skip too long quotes (would fail processing by the language model anyway)
+    if (quote.length > 1_000) {
+      return { score: 0, cleanQuote: "" } as AiResponse
+    }
+
     const messages = [
       {
         role: "system",
