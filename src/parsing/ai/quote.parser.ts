@@ -210,9 +210,6 @@ export class QuoteParser {
       )
     }
 
-    // TODO: Remove this debug log
-    console.log(`${String(parsedResponse.score)}: ${parsedResponse.cleanQuote}`)
-
     return {
       score: parsedResponse.score,
       cleanQuote: parsedResponse.cleanQuote,
