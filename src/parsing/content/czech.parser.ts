@@ -64,9 +64,14 @@ export class CzechParser extends ContentParser {
     "Diskuse:",
     "Diskuse ke kategorii:",
     "Diskuse s uživatelem:",
+    "Diskuse k MediaWiki:",
+    "Diskuse k Wikicitátům:",
+    "Diskuse k dílu:",
+    "Diskuse k šabloně:",
     "Nápověda:",
     "Speciální:",
     "Dílo:",
+    "Šablona:",
   ]
   private readonly forbiddenPagePrefixesRegex: RegExp
 
