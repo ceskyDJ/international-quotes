@@ -36,10 +36,10 @@ export interface DatabaseConfig {
 /**
  * Configuration for the AI APIs
  *
- * @property googleKey The API key for Google AI API
+ * @property openaiKey The API key for OpenAI API
  */
 export interface AiApiConfig {
-  googleKey: string
+  openaiKey: string
 }
 
 /**
@@ -72,11 +72,11 @@ export class ConfigProvider {
       database: process.env.POSTGRESQL_DATABASE || "international-quotes",
     }
 
-    if (!process.env.GOOGLE_AI_API_KEY) {
-      throw new Error("GOOGLE_AI_API_KEY environment variable is not set")
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error("OPENAI_API_KEY environment variable is not set")
     }
     this.aiApiConfig = {
-      googleKey: process.env.GOOGLE_AI_API_KEY,
+      openaiKey: process.env.OPENAI_API_KEY,
     }
   }
 

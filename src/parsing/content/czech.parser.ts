@@ -180,19 +180,17 @@ export class CzechParser extends ContentParser {
 
         // Skip quote candidates that are not likely to be quotes
         // or not good enough
-        if (parsedQuote.score <= 50 || parsedQuote.cleanQuote?.trim() === "") {
+        if (parsedQuote.score <= 50 || parsedQuote.cleanQuote.trim() === "") {
           continue
         }
 
         // Skip too long quotes
-        if ((parsedQuote.cleanQuote?.length ?? 0) > 500) {
+        if (parsedQuote.cleanQuote.length > 500) {
           continue
         }
 
         const quote = new Quote(
-          // cleanQuote should always be present (it's missing only for quotes
-          // with score 0), but strict typing has to be satisfied
-          parsedQuote.cleanQuote ?? quoteCandidateText,
+          parsedQuote.cleanQuote,
           pageUrl,
           parsedQuote.score,
           author,

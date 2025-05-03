@@ -39,10 +39,15 @@ This subsection lists links to sources related to the dataset building from Wiki
 - [Documentation of Wikimedia dumps](https://dumps.wikimedia.org/)
 - [README of `fast-xml-parser`](https://github.com/NaturalIntelligence/fast-xml-parser)
 - [README of `wtf_wikipedia`](https://github.com/spencermountain/wtf_wikipedia)
-- [Pricing of Google language model API](https://ai.google.dev/gemini-api/docs/pricing)
-- [Documentation of Google AI API](https://googleapis.github.io/js-genai/main/index.html)
 - [Article about type for associative array in TypeScript](https://www.geeksforgeeks.org/how-to-use-associative-array-in-typescript/)
 - [Article about reading files via node.js](https://nodejs.org/en/learn/manipulating-files/reading-files-with-nodejs)
+- [Guide about Responses vs. Chat Completions API](https://platform.openai.com/docs/guides/responses-vs-chat-completions)
+- [Documentation of OpenAI API](https://platform.openai.com/docs)
+- [Guide about rate limits of OpenAI API](https://platform.openai.com/docs/guides/rate-limits)
+- [Guide about structured outputs of OpenAI API](https://platform.openai.com/docs/guides/structured-outputs?api-mode=chat&lang=javascript)
+- [Pricing of OpenAI API](https://openai.com/api/pricing/)
+- [Discussion about `temperature` and `top_p`](https://community.openai.com/t/temperature-and-top-p-interactions/612447/2)
+- [Article about `temperature` and `top_p`](https://medium.com/@1511425435311/understanding-openais-temperature-and-top-p-parameters-in-language-models-d2066504684f)
 
 ### API
 
@@ -89,7 +94,9 @@ These conversations with a language model were used for observing the project do
 There are several prepared prompts for processing unstructured data from Wiki quote pages:
 
 - [Human name checker and normalizer](https://aistudio.google.com/app/prompts?state=%7B%22ids%22:%5B%2210oDw_hBQn2rnOb-LvQqvCDYYPwgZZ0wD%22%5D,%22action%22:%22open%22,%22userId%22:%22105912846041291166242%22,%22resourceKeys%22:%7B%7D%7D&usp=sharing)
+    * [OpenAI version](https://platform.openai.com/playground/p/dbXik10sS9MYlfN3Fg51KXXT?mode=chat)
 - [Quote scoring](https://aistudio.google.com/app/prompts?state=%7B%22ids%22:%5B%221-FZltVKD-qjx0JkhogYeXCLOBaop9mzH%22%5D,%22action%22:%22open%22,%22userId%22:%22105912846041291166242%22,%22resourceKeys%22:%7B%7D%7D&usp=sharing)
+    * [OpenAI version](https://platform.openai.com/playground/p/m5tKJ291pGRcBQHYYERYN5Tv?mode=chat)
 
 
 ## Idea behind the project

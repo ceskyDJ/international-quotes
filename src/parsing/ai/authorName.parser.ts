@@ -3,17 +3,23 @@
  * @date 25th April 2025
  */
 
-import { GoogleGenAI, Type } from "@google/genai"
 import { Service } from "typedi"
+import OpenAI from "openai"
+import { ChatCompletionMessageParam } from "openai/resources/chat/completions/completions"
+import { ResponseFormatJSONSchema } from "openai/resources"
 
 import { ConfigProvider } from "../../providers"
 
 /**
  * Interface for typing the response from the AI model
+ *
+ * @property isHuman Language model's decision if the text sequence is a human name
+ * @property englishName The English equivalent of the name (if isHuman is false, this should be empty string)
  */
 interface AiResponse {
   isHuman: boolean
-  englishName?: string
+
+  englishName: string
 }
 
 /**
@@ -21,10 +27,33 @@ interface AiResponse {
  */
 @Service()
 export class AuthorNameParser {
-  private readonly MODEL_NAME = "gemini-2.0-flash"
+  /**
+   * API name of the language model used for parsing quotes
+   */
+  private readonly MODEL_NAME = "gpt-4.1-mini"
+  /**
+   * Maximum number of output (and possibly reasoning) tokens for the language model
+   *
+   * This is the maximum number of tokens that can be used in a single request.
+   * The model will not process requests with more tokens than this value.
+   *
+   * It should be large enough to fit a quote with reasonable length
+   */
+  private readonly MAX_TOKENS = 32
+  /**
+   * Maximum number of retries for the request to AI API
+   *
+   * This is the maximum number of times the request will be retried in case of
+   * an error (e.g., server error, timeout, etc.). The delay between retries
+   * is increasing (quadratic) to avoid overwhelming the server and getting
+   * blocked by rate limiting.
+   */
   private readonly MAX_RETRIES = 3
 
-  private readonly googleAi: GoogleGenAI
+  /**
+   * Abstraction of OpenAI API that constructs API calls under the hood
+   */
+  private readonly openai: OpenAI
 
   /**
    * Constructor for the AuthorNameParser
@@ -34,8 +63,8 @@ export class AuthorNameParser {
   public constructor(configProvider: ConfigProvider) {
     const aiApiConfig = configProvider.provideAiApiConfig()
 
-    this.googleAi = new GoogleGenAI({
-      apiKey: aiApiConfig.googleKey,
+    this.openai = new OpenAI({
+      apiKey: aiApiConfig.openaiKey,
     })
   }
 
@@ -53,71 +82,71 @@ export class AuthorNameParser {
    * @returns The normalized author name or null if not a human name
    */
   public async normalizeAuthorName(authorName: string): Promise<string | null> {
-    const config = {
-      temperature: 0,
-      topP: 1,
-      responseMimeType: "application/json",
-      responseSchema: {
-        type: Type.OBJECT,
-        required: ["isHuman"],
-        properties: {
-          isHuman: {
-            type: Type.BOOLEAN,
+    const messages: ChatCompletionMessageParam[] = [
+      {
+        role: "system",
+        content: [
+          {
+            type: "text",
+            text: 'You are a professional international linguist. You aim to decide whether the provided text sequence in different languages is a human name or something else (e.g., an object name or a verb). You have to form your output as a valid JSON object with two properties:\n- isHuman—boolean, which contains the result of your decision, if the text sequence consists of a real human name.\n- englishName—string, which is set to an English equivalent of the name (or the same name, if it was English), if isHuman is set to true.\n\nThis is an example of general input and output:\n<input>\nWinston Churchill\n</input>\n<output>\n{"isHuman":true,"englishName":"Winston Churchill"}\n</output>\n\nWhen the input contains a valid name, but it\'s not in English form, it looks like this:\n<input>\nArtur Şopenhauer\n</input>\n<output>\n{"isHuman":true,"englishName":"Arthur Schopenhauer"}\n</output>\n\nWhen the input doesn\'t contain a human name, the input and output could look like this:\n<input>\nAnimal farm\n</input>\n<output>\n{"isHuman":false,"englishName":""}\n</output>',
           },
-          englishName: {
-            type: Type.STRING,
+        ],
+      },
+      {
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text: authorName,
           },
+        ],
+      },
+    ]
+
+    const responseFormat = {
+      type: "json_schema",
+      json_schema: {
+        name: "name_normalizing_schema",
+        strict: true,
+        schema: {
+          type: "object",
+          properties: {
+            isHuman: {
+              type: "boolean",
+              description:
+                "Indicates if the text sequence is a real human name.",
+            },
+            englishName: {
+              type: "string",
+              description:
+                "The English equivalent of the name, or the same name if it is English.",
+            },
+          },
+          required: ["isHuman", "englishName"],
+          additionalProperties: false,
         },
       },
-      thinkingConfig: {
-        thinkingBudget: 0,
-      },
-      systemInstruction: [
-        {
-          text: `You are a professional international linguist. You aim to decide whether the provided text sequence in different languages is a human name or something else (e.g., an object name or a verb). You have to form your output as a valid JSON object with two properties:
-- isHuman—boolean, which contains the result of your decision, if the text sequence consists of a real human name.
-- englishName—string, which is set to an English equivalent of the name (or the same name, if it was English), if isHuman is set to true.
-
-This is an example of general input and output:
-<input>
-Winston Churchill
-</input>
-<output>
-{"isHuman":true,"englishName":"Winston Churchill"}
-</output>
-
-When the input contains a valid name, but it's not in English form, it looks like this:
-<input>
-Artur Şopenhauer
-</input>
-<output>
-{"isHuman":true,"englishName":"Arthur Schopenhauer"}
-</output>
-
-When the input doesn't contain a human name, the input and output could look like this:
-<input>
-Animal farm
-</input>
-<output>
-{"human-name":false}
-</output>`,
-        },
-      ],
-    }
+    } as ResponseFormatJSONSchema
 
     // Try to get answer from the AI model
     // Sometimes, there could be some error on the server side, so multiple attempts are used
     let response
     for (let i = 0; i < this.MAX_RETRIES; i++) {
       try {
-        response = await this.googleAi.models.generateContent({
+        response = await this.openai.chat.completions.create({
           model: this.MODEL_NAME,
-          config: config,
-          contents: authorName,
+          messages: messages,
+          response_format: responseFormat,
+          max_completion_tokens: this.MAX_TOKENS,
+          temperature: 0, // No creativity (almost)
+          top_p: 1, // No limit for tokens available for usage
+          frequency_penalty: 0, // We're not generating creative text, so no penalty
+          presence_penalty: 0, // We're not generating creative text, so no penalty
+          store: false, // Don't store the chat logs
         })
 
         // Check if the response content is valid
-        if (response.text === undefined) {
+        if (response.choices[0].message.content === null) {
           // Response without text is similar to no response at all, so we
           // simulate communication error (using locally caught error) to retry
           // noinspection ExceptionCaughtLocallyJS
@@ -125,7 +154,9 @@ Animal farm
         }
 
         break
-      } catch {
+      } catch (error) {
+        console.error(error)
+
         // Ignore errors and try again after a short delay
         // d = a^2 seconds (d = delay, a = attempt number indexed from 1)
         // Source: https://stackoverflow.com/a/49139664
@@ -141,14 +172,15 @@ Animal farm
     }
 
     // Check if a language model returned some text
-    if (response.text === undefined) {
+    const responseText = response.choices[0].message.content
+    if (responseText === null) {
       throw new Error(
         `No text response arrived from language model. Details: ${JSON.stringify(response)}`,
       )
     }
 
-    const parsedResponse = JSON.parse(response.text) as AiResponse
+    const parsedResponse = JSON.parse(responseText) as AiResponse
 
-    return parsedResponse.isHuman ? (parsedResponse.englishName ?? null) : null
+    return parsedResponse.isHuman ? parsedResponse.englishName : null
   }
 }
