@@ -31,7 +31,7 @@ motivational, etc.).
 I figured out that the best way to process the data is to use a language model, which can handle unstructured data
 pretty well. ~~I decided to use the Google Gemini API, which is a paid service, but it has a free budget for start,
 which should be enough for the project.~~ After various experiments, I switched to the OpenAI API, which has more
-generous rate limits. As I use GPT4.1-mini, the cost is a little higher than with Gemini Flash 2.5 preview, but as I
+generous rate limits. As I use GPT4.1-mini, the cost is a little higher than with Gemini 2.5 Flash (preview), but as I
 noticed, results are better. I also tried GPT4.1-micro (with a similar price to the model from Google), but it performed
 pretty badly, so I decided to use the bigger model. Overall costs are under 8 USD for processing the whole Czech Wiki
 quote, which seems reasonable for me. The question is, how to cover the costs for processing other languages, and
