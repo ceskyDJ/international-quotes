@@ -82,6 +82,11 @@ export class AuthorNameParser {
    * @returns The normalized author name or null if not a human name
    */
   public async normalizeAuthorName(authorName: string): Promise<string | null> {
+    // Skip empty and numeric "names"
+    if (authorName.length === 0 || !isNaN(Number(authorName))) {
+      return null
+    }
+
     const messages: ChatCompletionMessageParam[] = [
       {
         role: "system",
