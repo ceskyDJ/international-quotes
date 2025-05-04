@@ -13,6 +13,57 @@ All of these were checked and edited to the final form by me.
 Generated documentation is available under the `doc` directory. It is created by `typedoc`.
 
 
+## Idea behind the project
+
+As there are only a few international quote APIs available on the Internet, and as far as I know, none of them are free
+(price and freedom) to use, I decided to create my own API.
+
+The data comes from the [Wiki quote](https://www.wikiquote.org/), which is another project from Wikimedia Foundation
+(as Wikipedia, Wikidata and other free sources of knowledge). The decision to use this source was made in
+https://github.com/XengShi/materialYouNewTab/issues/457 as Wiki quote has free license and contains quotes from many
+languages. On top of that, Wiki quote offers dump files, which could be processed without scraping the website.
+
+There is a challenge to process the data from Wiki quote, as they aren't very structured (which isn't too obvious at
+first sight). Every language has its own way of how to structure pages, and none of them uses very strict structure
+(there are lots of subcategories, which are defined by natural language, so unsourced quotes are combined with
+motivational, etc.).
+
+I figured out that the best way to process the data is to use a language model, which can handle unstructured data
+pretty well. ~~I decided to use the Google Gemini API, which is a paid service, but it has a free budget for start,
+which should be enough for the project.~~ After various experiments, I switched to the OpenAI API, which has more
+generous rate limits. As I use GPT4.1-mini, the cost is a little higher than with Gemini Flash 2.5 preview, but as I
+noticed, results are better. I also tried GPT4.1-micro (with a similar price to the model from Google), but it performed
+pretty badly, so I decided to use the bigger model. Overall costs are under 8 USD for processing the whole Czech Wiki
+quote, which seems reasonable for me. The question is, how to cover the costs for processing other languages, and
+especially the English Wiki quote, which is way bigger than the Czech one.
+
+Language models are used for:
+- **detecting pages about people**—There are lots of aggregation pages that combine quotes from several people and group
+them to some categories. This is done by checking if the page title consists of a human name.
+- **normalizing author names**—Each language names the same person differently, so if I want to group quotes by author
+no matter the language, I need to normalize the names to English form.
+- **scoring quotes**—As pages are unstructured, I need to consider what is a quote and what is some descriptive text
+and finally recognize good-quality quotes people care about the most. This is done by assigning an integer score to each
+extracted potential quote and comparing the score against a threshold.
+
+After processing, the data is stored in a relational database (PostgreSQL) and served by a simple REST API.
+
+Updating process is planned to be done as a cron job, which will check if there are new dump files and process them. As
+it's hard to predict what quotes were changed, this process just cleans the database and processes all the dump files
+again. This is not the most efficient way, but it shouldn't be a problem, as the dump files are updated pretty rarely
+(it should be about once a month).
+
+
+## Prepared prompts for processing unstructured data from Wiki quote pages
+
+There are several prepared prompts for processing unstructured data from Wiki quote pages:
+
+- [Human name checker and normalizer](https://aistudio.google.com/app/prompts?state=%7B%22ids%22:%5B%2210oDw_hBQn2rnOb-LvQqvCDYYPwgZZ0wD%22%5D,%22action%22:%22open%22,%22userId%22:%22105912846041291166242%22,%22resourceKeys%22:%7B%7D%7D&usp=sharing)
+    * [OpenAI version](https://platform.openai.com/playground/p/dbXik10sS9MYlfN3Fg51KXXT?mode=chat)
+- [Quote scoring](https://aistudio.google.com/app/prompts?state=%7B%22ids%22:%5B%221-FZltVKD-qjx0JkhogYeXCLOBaop9mzH%22%5D,%22action%22:%22open%22,%22userId%22:%22105912846041291166242%22,%22resourceKeys%22:%7B%7D%7D&usp=sharing)
+    * [OpenAI version](https://platform.openai.com/playground/p/m5tKJ291pGRcBQHYYERYN5Tv?mode=chat)
+
+
 ## Used and studied sources (relevant only)
 
 This section contains links to the sources that were used in the project. For limiting the list size, only relevant
@@ -90,54 +141,3 @@ These conversations with a language model were used for observing the project do
 - https://chat.ceskydj.cz/share/EeDqzSiG1QssANaBCRoJb
 - https://chat.ceskydj.cz/share/XVe_JMTs0A661zKMPRG9J
 - https://chat.ceskydj.cz/share/yeLL6npy1cvR7aLKB76jH
-
-
-## Prepared prompts for processing unstructured data from Wiki quote pages
-
-There are several prepared prompts for processing unstructured data from Wiki quote pages:
-
-- [Human name checker and normalizer](https://aistudio.google.com/app/prompts?state=%7B%22ids%22:%5B%2210oDw_hBQn2rnOb-LvQqvCDYYPwgZZ0wD%22%5D,%22action%22:%22open%22,%22userId%22:%22105912846041291166242%22,%22resourceKeys%22:%7B%7D%7D&usp=sharing)
-    * [OpenAI version](https://platform.openai.com/playground/p/dbXik10sS9MYlfN3Fg51KXXT?mode=chat)
-- [Quote scoring](https://aistudio.google.com/app/prompts?state=%7B%22ids%22:%5B%221-FZltVKD-qjx0JkhogYeXCLOBaop9mzH%22%5D,%22action%22:%22open%22,%22userId%22:%22105912846041291166242%22,%22resourceKeys%22:%7B%7D%7D&usp=sharing)
-    * [OpenAI version](https://platform.openai.com/playground/p/m5tKJ291pGRcBQHYYERYN5Tv?mode=chat)
-
-
-## Idea behind the project
-
-As there are only a few international quote APIs available on the Internet, and as far as I know, none of them are free
-(price and freedom) to use, I decided to create my own API.
-
-The data comes from the [Wiki quote](https://www.wikiquote.org/), which is another project from Wikimedia Foundation
-(as Wikipedia, Wikidata and other free sources of knowledge). The decision to use this source was made in
-https://github.com/XengShi/materialYouNewTab/issues/457 as Wiki quote has free license and contains quotes from many
-languages. On top of that, Wiki quote offers dump files, which could be processed without scraping the website.
-
-There is a challenge to process the data from Wiki quote, as they aren't very structured (which isn't too obvious at
-first sight). Every language has its own way of how to structure pages, and none of them uses very strict structure
-(there are lots of subcategories, which are defined by natural language, so unsourced quotes are combined with
-motivational, etc.).
-
-I figured out that the best way to process the data is to use a language model, which can handle unstructured data
-pretty well. ~~I decided to use the Google Gemini API, which is a paid service, but it has a free budget for start,
-which should be enough for the project.~~ After various experiments, I switched to the OpenAI API, which has more
-generous rate limits. As I use GPT4.1-mini, the cost is a little higher than with Gemini Flash 2.5 preview, but as I
-noticed, results are better. I also tried GPT4.1-micro (with a similar price to the model from Google), but it performed
-pretty badly, so I decided to use the bigger model. Overall costs are under 8 USD for processing the whole Czech Wiki
-quote, which seems reasonable for me. The question is, how to cover the costs for processing other languages, and
-especially the English Wiki quote, which is way bigger than the Czech one.
-
-Language models are used for:
-- **detecting pages about people**—There are lots of aggregation pages that combine quotes from several people and group
-them to some categories. This is done by checking if the page title consists of a human name.
-- **normalizing author names**—Each language names the same person differently, so if I want to group quotes by author
-no matter the language, I need to normalize the names to English form.
-- **scoring quotes**—As pages are unstructured, I need to consider what is a quote and what is some descriptive text
-and finally recognize good-quality quotes people care about the most. This is done by assigning an integer score to each
-extracted potential quote and comparing the score against a threshold.
-
-After processing, the data is stored in a relational database (PostgreSQL) and served by a simple REST API.
-
-Updating process is planned to be done as a cron job, which will check if there are new dump files and process them. As
-it's hard to predict what quotes were changed, this process just cleans the database and processes all the dump files
-again. This is not the most efficient way, but it shouldn't be a problem, as the dump files are updated pretty rarely
-(it should be about once a month).
