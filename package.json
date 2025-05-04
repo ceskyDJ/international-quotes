@@ -48,7 +48,8 @@
     "typedi": "^0.10.0",
     "typeorm": "^0.3.22",
     "wtf_wikipedia": "^10.4.0",
-    "wtf-plugin-i18n": "^1.0.2"
+    "wtf-plugin-i18n": "^1.0.2",
+    "xxhash-addon": "^2.0.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.1",

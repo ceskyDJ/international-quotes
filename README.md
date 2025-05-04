@@ -48,6 +48,9 @@ This subsection lists links to sources related to the dataset building from Wiki
 - [Pricing of OpenAI API](https://openai.com/api/pricing/)
 - [Discussion about `temperature` and `top_p`](https://community.openai.com/t/temperature-and-top-p-interactions/612447/2)
 - [Article about `temperature` and `top_p`](https://medium.com/@1511425435311/understanding-openais-temperature-and-top-p-parameters-in-language-models-d2066504684f)
+- [Article about writing files via node.js](https://nodejs.org/en/learn/manipulating-files/writing-files-with-nodejs)
+- [README of `xxhash-addon`](https://github.com/ktrongnhan/xxhash-addon)
+- [Documentation of node.js's file system API](https://nodejs.org/api/fs.html)
 
 ### API
 

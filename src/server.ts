@@ -11,7 +11,6 @@ import { Container } from "typedi"
 
 import { AppBootstrap } from "./app"
 import { ConfigProvider, DataSourceProvider } from "./providers"
-import { QuoteService } from "./services"
 import { WikiquoteLoader } from "./loading"
 
 void (async (): Promise<void> => {
@@ -28,19 +27,11 @@ void (async (): Promise<void> => {
     const dataSource = dataSourceProvider.provide()
     await dataSource.initialize()
 
-    // Prepare data to be served by application (if needed)
-    const quoteService = Container.get(QuoteService)
-    if ((await quoteService.count()) === 0) {
-      console.log(
-        "[WARNING] Database is empty. Loading quotes from Wikiquote dumps..." +
-          " This may take a while, depending on the size of the dump files.",
-      )
-
-      const wikiQuoteLoader = Container.get(WikiquoteLoader)
-      await wikiQuoteLoader.loadQuotesFromWikiDump(
-        `${__dirname}/../dumps/cswikiquote-20250320-pages-meta-current.xml`,
-      )
-    }
+    // Prepare data to be served by application
+    const wikiQuoteLoader = Container.get(WikiquoteLoader)
+    await wikiQuoteLoader.loadQuotesFromWikiDump(
+      `${__dirname}/../dumps/cswikiquote-20250320-pages-meta-current.xml`,
+    )
 
     // Setup application
     const bootstrap = Container.get(AppBootstrap)
