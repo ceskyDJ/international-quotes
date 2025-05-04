@@ -68,7 +68,7 @@ This subsection lists links to sources related to the documentation of the proje
 - [Documentation of `typedoc`](https://typedoc.org/modules.html)
 - [README of `typedoc-theme-hierarchy`](https://github.com/DiFuks/typedoc-theme-hierarchy)
 
-# Static index page
+## Static index page
 
 The subsection lists links to sources related to the static index page of the project:
 
